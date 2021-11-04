@@ -47,6 +47,7 @@ class DataBase:
 
 # ---------------------------------- Testing --------------------------------- #
 
+print('potate')
 if __name__ == '__main__':
     db = DataBase()
     for i in range(10):
