@@ -21,18 +21,18 @@ class Post:
 # it is initialised at startup.
 class DataBase:
     def __init__(self):
-        self.db = {'t' : [], 'n' : []}
+        self.db = {'t' : [Post(ID = 0, replyTo = 0, content = "xxx")], 'n' : [Post(ID = 0, replyTo = 0, content = "xxx")]}
 
     def __str__(self):
         return str(self.db)
 
     # Return the next valid ID for a board
     def next_id(self, board):
-        return len(self.db[board]) + 1
+        return len(self.db[board])
 
     # Tries to append a new post to a board. If it can be done, return True
     def new_post(self, board, post):
-        if len(self.db[board]) + 1 == post.ID: # TODO: test for replyTo's value
+        if len(self.db[board]) == post.ID: # TODO: test for replyTo's value
             self.db[board].append(post)
             return True
         else:
@@ -45,12 +45,54 @@ class DataBase:
         post = Post(ID = ID, content = content, replyTo = replyTo)
         return self.new_post(board, post)
 
+    # Reads the db to find the last few posts
+    def get_last_posts(self, board, num):
+        if num > len(self.db[board]):
+            num = len(self.db[board])
+        reply = []
+        for i in range(len(self.db[board])-1, len(self.db[board])-num-1, -1):
+            reply.append(self.db[board][i])
+        return reply
+
+    # Returns a specific post by its ID
+    # Also returns a boolean telling if the search was successfull
+    def get_post(self, board, ID):
+        try:
+            if self.db[board][ID].ID == ID: # Everything is well
+                return self.db[board][ID], True
+            else:
+                raise IndexError # Force a pass in the except block
+        except IndexError:
+            return None, False
+
+    # Return the fisrt few post replying to an other post
+    def get_first_replies(self, board, num, ID):
+        ret = []
+        for i in self.db[board][ID+1:-1]:
+            if i.replyTo == ID:
+                ret.append(i)
+                if len(ret) == num:
+                    break
+        return ret
+
 # ---------------------------------- Testing --------------------------------- #
 
-print('potate')
 if __name__ == '__main__':
     db = DataBase()
+    print('\n -- Testing posting -- \n')
     for i in range(10):
         db.auto_post('t', str(i), 0)
     print(db)
+    print('\n -- Testing reading some posts -- \n')
+    print(db.get_last_posts('t', 4))
+    print(db.get_last_posts('t', 0))
+    print(db.get_last_posts('t', 1))
+    print(db.get_last_posts('t', 11))
+    print(db.get_last_posts('t', 12))
+    print('\n -- Testing reading post by ID -- \n')
+    print(db.get_post('t', 4))
+    print(db.get_post('t', -1))
+    print(db.get_post('t', 100))
+    print('\n -- Testing reading thread -- \n')
+    print(db.get_first_replies('t', 4, 0))
 
