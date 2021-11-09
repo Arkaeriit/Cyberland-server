@@ -29,9 +29,9 @@ For each board, the configuration fields are the following:
 A Cyberland server hosts multiple boards. Each board is independent of the other and they are meant to be about various subjects. For example, the board `/t/` form `cyberland.bobignou.red` is meant to be about technology while the board `/n/` is meant to be about news.
 
 ### Post
-Cyberland posts are very simples. They have a unique `ID` field which is a positive integer. This field corresponds to the order in the board they are posted. The first post on a board will have ID 1, the second will have ID 2. Two posts on the same board can not have the same ID but two posts from two different boards can have the same ID.
+Cyberland posts are very simples. They have a unique `id` field which is a positive integer. This field corresponds to the order in the board they are posted. The first post on a board will have id 1, the second will have id 2. Two posts on the same board can not have the same id but two posts from two different boards can have the same id.
 
-The posts also have a `ReplyTo` field. This field contains a positive integer that is the ID of another post from the same board. If that field contains 0, that means that the post is not replying to any other and is the start of a new thread. Alternatively, the field can contain "null" to express the same thing.
+The posts also have a `ReplyTo` field. This field contains a positive integer that is the id of another post from the same board. If that field contains 0, that means that the post is not replying to any other and is the start of a new thread. Alternatively, the field can contain "null" to express the same thing.
 
 Lastly, the post has a `content` field that contains the message in the post. The message can be made from Unicode characters or, if the board allows it, Unicode characters and ANSI escape code. The content field can have a maximum size and the server could reject messages that are bigger than this size.
 
@@ -45,7 +45,7 @@ The operation to do is selected with the HTTP method used and the details of the
 The server replies with JSON data or HTTP error codes.
 
 #### Posting messages
-Posting a message on a board is made with the POST HTTP method. The message and other info are in the form of the request. The field `content` contains the message and the optional field `replyTo` can contain the ID of a post we want to reply to.
+Posting a message on a board is made with the POST HTTP method. The message and other info are in the form of the request. The field `content` contains the message and the optional field `replyTo` can contain the id of a post we want to reply to.
 
 If the form is valid, the server will reply with the code 200. If it is not, it will reply with the code 400 and with a message explaining what is wrong.
 
@@ -54,9 +54,9 @@ Reading what is on a board is made with the GET HTTP method. The request is spec
 
 The first valid parameter is `num`. It should contain a positive integer. It describes the maximum number of posts the server should send. If it is not specified, the server will send the maximum number of posts that are compliant with the rest of the request.
 
-The second valid parameter is `thread`. It should contain an ID. If it is set, the server will return the post with the given ID and posts replying to it.
+The second valid parameter is `thread`. It should contain an id. If it is set, the server will return the post with the given id and posts replying to it.
 
-The server will reply with a JSON array containing all the posts requested. If the parameter `thread` is not set, the post with the greatest ID will be at the index 0 of the array. The rest of the posts are sorted by decreasing ID. If the parameter `thread` is set, the post with the smaller ID will be at index 0 and the other post will be sorted by increasing ID. This is made that way to ensure that a request with parameters `num=1` and thread not set will return the latest post and a request where `num=1&thread=<XX>` will return the pos with ID `<XX>`.
+The server will reply with a JSON array containing all the posts requested. If the parameter `thread` is not set, the post with the greatest id will be at the index 0 of the array. The rest of the posts are sorted by decreasing id. If the parameter `thread` is set, the post with the smaller id will be at index 0 and the other post will be sorted by increasing id. This is made that way to ensure that a request with parameters `num=1` and thread not set will return the latest post and a request where `num=1&thread=<XX>` will return the pos with id `<XX>`.
 
 If the parameter makes sense, the server will reply with the status code 200. If there is an error the status code 400 will be replied and an error message will be sent.
 

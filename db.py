@@ -12,7 +12,7 @@ class Post:
     """
     This class is used to represent a single post.
     """
-    ID: int
+    id: int
     replyTo: int
     content: str
 
@@ -21,7 +21,7 @@ class Post:
 # it is initialised at startup.
 class DataBase:
     def __init__(self):
-        self.db = {'t' : [Post(ID = 0, replyTo = 0, content = "xxx")], 'n' : [Post(ID = 0, replyTo = 0, content = "xxx")]}
+        self.db = {'t' : [Post(id = 0, replyTo = 0, content = "xxx")], 'n' : [Post(id = 0, replyTo = 0, content = "xxx")]}
 
     def __str__(self):
         return str(self.db)
@@ -32,7 +32,7 @@ class DataBase:
 
     # Tries to append a new post to a board. If it can be done, return True
     def new_post(self, board, post):
-        if len(self.db[board]) == post.ID: # TODO: test for replyTo's value
+        if len(self.db[board]) == post.id: # TODO: test for replyTo's value
             self.db[board].append(post)
             return True
         else:
@@ -41,8 +41,8 @@ class DataBase:
     # Make a new post with a comment and a replyTo and automaticaly choose the
     # righ ID. Returns the same value as new_post
     def auto_post(self, board, content, replyTo):
-        ID = self.next_id(board)
-        post = Post(ID = ID, content = content, replyTo = replyTo)
+        id = self.next_id(board)
+        post = Post(id = id, content = content, replyTo = replyTo)
         return self.new_post(board, post)
 
     # Reads the db to find the last few posts
@@ -56,20 +56,20 @@ class DataBase:
 
     # Returns a specific post by its ID
     # Also returns a boolean telling if the search was successfull
-    def get_post(self, board, ID):
+    def get_post(self, board, id):
         try:
-            if self.db[board][ID].ID == ID: # Everything is well
-                return self.db[board][ID], True
+            if self.db[board][id].id == id: # Everything is well
+                return self.db[board][id], True
             else:
                 raise IndexError # Force a pass in the except block
         except IndexError:
             return None, False
 
     # Return the fisrt few post replying to an other post
-    def get_first_replies(self, board, num, ID):
+    def get_first_replies(self, board, num, id):
         ret = []
-        for i in self.db[board][ID+1:-1]:
-            if i.replyTo == ID:
+        for i in self.db[board][id+1:-1]:
+            if i.replyTo == id:
                 ret.append(i)
                 if len(ret) == num:
                     break
