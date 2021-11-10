@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-This file contains what is needed to interrac with the database of all posts.
-As of now, for testing purpuse, the posts are stored in RAM and backed-up in a
+This file contains what is needed to interact with the database of all posts.
+As of now, for testing purpose, the posts are stored in RAM and backed-up in a
 JSON file. But this will have to be replaced with a proper database in the future.
 """
 
@@ -26,27 +26,27 @@ class DataBase:
     def __str__(self):
         return str(self.db)
 
-    # Return the next valid ID for a board
     def next_id(self, board):
+        "Return the next valid ID for a board"
         return len(self.db[board])
 
-    # Tries to append a new post to a board. If it can be done, return True
     def new_post(self, board, post):
+        "Tries to append a new post to a board. If it can be done, return True."
         if len(self.db[board]) == post.id: # TODO: test for replyTo's value
             self.db[board].append(post)
             return True
         else:
             return False
 
-    # Make a new post with a comment and a replyTo and automaticaly choose the
-    # righ ID. Returns the same value as new_post
     def auto_post(self, board, content, replyTo):
+        """Make a new post with a comment and a replyTo and automatically choose the
+        right ID. Returns the same value as new_post."""
         id = self.next_id(board)
         post = Post(id = id, content = content, replyTo = replyTo)
         return self.new_post(board, post)
 
-    # Reads the db to find the last few posts
     def get_last_posts(self, board, num):
+        "Reads the db to find the last few posts."
         if num > len(self.db[board]):
             num = len(self.db[board])
         reply = []
@@ -54,9 +54,9 @@ class DataBase:
             reply.append(self.db[board][i])
         return reply
 
-    # Returns a specific post by its ID
-    # Also returns a boolean telling if the search was successfull
     def get_post(self, board, id):
+        """Returns a specific post by its ID.
+        Also returns a boolean telling if the search was successful."""
         try:
             if self.db[board][id].id == id: # Everything is well
                 return self.db[board][id], True
@@ -65,8 +65,8 @@ class DataBase:
         except IndexError:
             return None, False
 
-    # Return the fisrt few post replying to an other post
     def get_first_replies(self, board, num, id):
+        "Return the first few post replying to an other post."
         ret = []
         for i in self.db[board][id+1:-1]:
             if i.replyTo == id:
