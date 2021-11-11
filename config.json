@@ -1,0 +1,9 @@
+[
+    {
+        "name": "test",
+        "description": "A test board. Used to test client and the server.",
+        "enable_ansi_code": false,
+        "max_post_size": "200",
+        "max_replies_no_thread": 1000
+    }
+]
