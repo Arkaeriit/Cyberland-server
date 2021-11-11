@@ -5,23 +5,40 @@ As of now, for testing purpose, the posts are stored in RAM and backed-up in a
 JSON file. But this will have to be replaced with a proper database in the future.
 """
 
-from dataclasses import dataclass
+import json
 
-@dataclass
-class Post:
-    """
-    This class is used to represent a single post.
-    """
-    id: int
-    replyTo: int
-    content: str
-
-
-# The database containing all the posts. As of now, for testing purpuse,
-# it is initialised at startup.
 class DataBase:
-    def __init__(self, server_config):
-        self.db = {'test' : [Post(id = 0, replyTo = 0, content = "xxx")], 'n' : [Post(id = 0, replyTo = 0, content = "xxx")]}
+    """The database containing all the posts. As of now, for testing purpuse,
+    it is only an humble JSON file"""
+    def __init__(self, server_config, db_filename):
+        # Reading db file
+        self.db_filename = db_filename
+        try:
+            with open(db_filename, "r") as db_f:
+                self.db = json.load(db_f)
+        except FileNotFoundError: # New server
+            self.db = {}
+        # Note: JSONDecodeError are considered fatal and not catched
+
+        # Starting up new boards
+        for k in server_config.keys():
+            try:
+                self.db[k]
+            except KeyError:
+                self.db[k] = [{"id": 0, "replyTo": 0, "content": server_config[k]["description"]}]
+
+        # Pruning old boards from the DB
+        for k in self.db.keys():
+            try:
+                server_config[k]
+            except KeyError:
+                self.db.pop(k)
+
+    def update_db(self):
+        "Update the db JSON file with new content from the internal DB."
+        with open(self.db_filename, "w") as db_f:
+            json_str = json.dumps(self.db)
+            db_f.write(json_str)
 
     def __str__(self):
         return str(self.db)
@@ -32,8 +49,9 @@ class DataBase:
 
     def new_post(self, board, post):
         "Tries to append a new post to a board. If it can be done, return True."
-        if len(self.db[board]) == post.id: # TODO: test for replyTo's value
+        if len(self.db[board]) == post["id"]: # TODO: test for replyTo's value
             self.db[board].append(post)
+            self.update_db()
             return True
         else:
             return False
@@ -42,7 +60,7 @@ class DataBase:
         """Make a new post with a comment and a replyTo and automatically choose the
         right ID. Returns the same value as new_post."""
         id = self.next_id(board)
-        post = Post(id = id, content = content, replyTo = replyTo)
+        post = {"id": id, "content": content, "replyTo": replyTo}
         return self.new_post(board, post)
 
     def get_last_posts(self, board, num):
@@ -58,7 +76,7 @@ class DataBase:
         """Returns a specific post by its ID.
         Also returns a boolean telling if the search was successful."""
         try:
-            if self.db[board][id].id == id: # Everything is well
+            if self.db[board][id]["id"] == id: # Everything is well
                 return self.db[board][id], True
             else:
                 raise IndexError # Force a pass in the except block
@@ -69,7 +87,7 @@ class DataBase:
         "Return the first few post replying to an other post."
         ret = []
         for i in self.db[board][id+1:-1]:
-            if i.replyTo == id:
+            if i["replyTo"] == id:
                 ret.append(i)
                 if len(ret) == num:
                     break
@@ -78,21 +96,23 @@ class DataBase:
 # ---------------------------------- Testing --------------------------------- #
 
 if __name__ == '__main__':
-    db = DataBase()
+    from config import read_config_file
+    config_OK, server_config = read_config_file("config.json")
+    db = DataBase(server_config, "db.json")
     print('\n -- Testing posting -- \n')
     for i in range(10):
-        db.auto_post('t', str(i), 0)
+        db.auto_post('test', str(i), 0)
     print(db)
     print('\n -- Testing reading some posts -- \n')
-    print(db.get_last_posts('t', 4))
-    print(db.get_last_posts('t', 0))
-    print(db.get_last_posts('t', 1))
-    print(db.get_last_posts('t', 11))
-    print(db.get_last_posts('t', 12))
+    print(db.get_last_posts('test', 4))
+    print(db.get_last_posts('test', 0))
+    print(db.get_last_posts('test', 1))
+    print(db.get_last_posts('test', 11))
+    print(db.get_last_posts('test', 12))
     print('\n -- Testing reading post by ID -- \n')
-    print(db.get_post('t', 4))
-    print(db.get_post('t', -1))
-    print(db.get_post('t', 100))
+    print(db.get_post('test', 4))
+    print(db.get_post('test', -1))
+    print(db.get_post('test', 100))
     print('\n -- Testing reading thread -- \n')
-    print(db.get_first_replies('t', 4, 0))
+    print(db.get_first_replies('test', 4, 0))
 

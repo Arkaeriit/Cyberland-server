@@ -7,7 +7,7 @@ It uses flask.
 from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from db import DataBase, Post
+from db import DataBase
 from config import read_config_file
 import sys
 
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     if not config_OK:
         print("Unable to read configuration.")
         sys.exit(1)
-    db = DataBase(server_config)
+    db = DataBase(server_config, "db.json")
 
 # --------------------------------- REST API --------------------------------- #
 
