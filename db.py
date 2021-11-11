@@ -20,8 +20,8 @@ class Post:
 # The database containing all the posts. As of now, for testing purpuse,
 # it is initialised at startup.
 class DataBase:
-    def __init__(self):
-        self.db = {'t' : [Post(id = 0, replyTo = 0, content = "xxx")], 'n' : [Post(id = 0, replyTo = 0, content = "xxx")]}
+    def __init__(self, server_config):
+        self.db = {'test' : [Post(id = 0, replyTo = 0, content = "xxx")], 'n' : [Post(id = 0, replyTo = 0, content = "xxx")]}
 
     def __str__(self):
         return str(self.db)

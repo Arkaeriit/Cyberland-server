@@ -8,18 +8,35 @@ from flask import Flask, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from db import DataBase, Post
+from config import read_config_file
+import sys
 
-app = Flask(__name__)
-limiter = Limiter(
-    app,
-    key_func=get_remote_address,
-    default_limits=["200 per day", "50 per hour"]
-)
-db = DataBase()
+# -------------------------- Preparing server's state ------------------------ #
+
+if __name__ == '__main__':
+    app = Flask(__name__)
+    limiter = Limiter(
+        app,
+        key_func=get_remote_address,
+        default_limits=["200 per day", "50 per hour"]
+    )
+    config_OK, server_config = read_config_file("config.json")
+    if not config_OK:
+        print("Unable to read configuration.")
+        sys.exit(1)
+    db = DataBase(server_config)
+
+# --------------------------------- REST API --------------------------------- #
 
 @app.route("/<string:board>/", methods=['POST'])
 @limiter.limit('5 per 1 seconds')
 def posting(board):
+    # Checking if board exists
+    try:
+        board_config = server_config[board]
+    except KeyError:
+        return "Error, requested board does not exits.", 400
+
     # Getting and testing the arguments
     content = request.form.get('content')
     replyTo = request.form.get('replyTo')
@@ -28,8 +45,11 @@ def posting(board):
     if not replyTo.isdigit():
         return "Error, replyTo is not a number nor null!", 400
     replyTo = int(replyTo)
-    # TODO: validate the content against the board number
+    if len(content) > board_config["max_post_size"]:
+        return "Error, post too long. Max size = "+str(board_config["max_post_size"])+".", 400
+    # TODO: Check inside of the content for ANSI codes
     
+    # Posting
     postOK = db.auto_post(board, content, replyTo)
     if postOK:
         return "OK", 200
@@ -40,15 +60,31 @@ def posting(board):
 @app.route("/<string:board>/", methods=['GET'])
 @limiter.limit("5 per 1 second")
 def reading(board):
+    # Checking if board exists
+    try:
+        board_config = server_config[board]
+    except KeyError:
+        return "Error, requested board does not exits.", 400
+
+    # Validated request form
     num = request.args.get('num')
     thread = request.args.get('thread')
-
     if not num:
         num = '100' #TODO: config
     if num.isdigit():
         num_int = int(num)
     else:
         return "Num parameter is not a number", 400
+
+    # Limiting reply size
+    if not thread:
+        if board_config["max_replies_no_thread"] != 0:
+            if board_config["max_replies_no_thread"] < num_int:
+                num_int = board_config["max_replies_no_thread"]
+    else:
+        if board_config["max_replies_thread"] != 0:
+            if board_config["max_replies_thread"] < num_int:
+                num_int = board_config["max_replies_thread"]
 
     # Reading last posts
     if not thread:

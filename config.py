@@ -68,7 +68,12 @@ def format_server_config(server_config_list):
                 print("A board have no name.")
             return False, ret
         ret[board_config["name"]] = board_config
-    return ret
+    return True, ret
+
+def read_config_file(filename):
+    "Reads a config file and returns the same things as format_server_config."
+    config_OK, server_config = format_server_config(json_to_dic(filename))
+    return config_OK, server_config
 
 # ----------------------------------- Test ----------------------------------- #
 
