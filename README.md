@@ -6,6 +6,14 @@ Cyberland is a textboard that offers no frontend. Most of the time, the user mak
 
 Unfortunately, the servers hosting the originals Cyberland have been taken down. Thus, I want to make a new one. I have chosen to make it from scratch instead of reusing one for two reasons. Firstly, I want to learn a bit about web technologies. Secondly, as the specifications of the Cyberland protocol have never been written, I want to make them.
 
+## Using cyberland
+
+### Server
+I am will be hosting this server at `cyberland.bobignou.red`. Go check it out.
+
+### Client
+To access the Cyberland server, you need a client. You can find plenty of them if you search for "cyberland client" on Github but I can always advertise [mine](https://github.com/Arkaeriit/cyberland.lua).
+
 ## This server
 
 ### Launching it
@@ -20,8 +28,13 @@ For each board, the configuration fields are the following:
 | description              | string  | A description of what this board is about.                                                                 |
 | max\_post\_size          | integer | Maximum size of a post in bytes.                                                                           |
 | enable\_ansi\_code       | boolean | Set to true to enable ANSI escape codes in a board.                                                        |
-| max\_replies\_thread     | integer | Maximum number of posts the server can present when the parameter `thread` is set. Set to 0 to disable.     |
-| max\_replies\_no\_thread | integer | Maximum number of posts the server can present when the parameter `thread` is not set. Set to 0 to disable. |
+| max\_replies\_thread     | integer | Maximum number of posts the server can present when the parameter `thread` is set. Set to 0 to disable.    |
+| max\_replies\_no\_thread | integer | Maximum number of posts the server can present when the parameter `thread` is not set. Set to 0 to disable.|
+
+I included in this repository the configuration used on `cyberland;github.com`.
+
+### Database
+As of now, the serer does not uses a proper database. All the posts are stored in a JSON file.
 
 ## Cyberland protocol
 

@@ -58,7 +58,7 @@ def posting(board):
 
 
 @app.route("/<string:board>/", methods=['GET'])
-@limiter.limit("5 per 1 second")
+@limiter.limit("10 per 1 second")
 def reading(board):
     # Checking if board exists
     try:
@@ -107,5 +107,5 @@ def reading(board):
 # ---------------------------- Running the server ---------------------------- #
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port = 8901)
 
