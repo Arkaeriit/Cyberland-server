@@ -29,7 +29,8 @@ if __name__ == '__main__':
 # --------------------------------- REST API --------------------------------- #
 
 @app.route("/<string:board>/", methods=['POST'])
-@limiter.limit('5 per 1 seconds')
+@limiter.limit('1 per 1 seconds')
+@limiter.limit('100 per 30 minutes')
 def posting(board):
     # Checking if board exists
     try:
@@ -46,8 +47,14 @@ def posting(board):
         return "Error, replyTo is not a number nor null!", 400
     replyTo = int(replyTo)
     if len(content) > board_config["max_post_size"]:
-        return "Error, post too long. Max size = "+str(board_config["max_post_size"])+".", 400
-    # TODO: Check inside of the content for ANSI codes
+        return "Error, post too long. Max size = "+str(board_config["max_post_size"])+", size of the message = "+str(len(content))+".", 400
+
+    # Checking for ANSI codes
+    if not board_config["enable_ansi_code"]:
+        for i in content:
+            chr_int = ord(i)
+            if chr_int < 32 and i != "\n" and i != "\r" and i != "\t":
+                return "Error, unauthorized char. ANSI code are not allowed.", 400
     
     # Posting
     postOK = db.auto_post(board, content, replyTo)
@@ -58,7 +65,8 @@ def posting(board):
 
 
 @app.route("/<string:board>/", methods=['GET'])
-@limiter.limit("10 per 1 second")
+@limiter.limit("5 per 1 second")
+@limiter.limit('100 per 10 minutes')
 def reading(board):
     # Checking if board exists
     try:
@@ -94,6 +102,8 @@ def reading(board):
     else:
         if thread.isdigit():
             thread_int = int(thread)
+        elif thread == "null":
+            thread_int = 0
         else:
             return "Thread parameter is not a number", 400
         OP, post_OK = db.get_post(board, thread_int)
