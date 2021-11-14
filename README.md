@@ -58,7 +58,7 @@ The operation to do is selected with the HTTP method used and the details of the
 The server replies with JSON data or HTTP error codes.
 
 #### Posting messages
-Posting a message on a board is made with the POST HTTP method. The message and other info are in the form of the request. The field `content` contains the message and the optional field `replyTo` can contain the id of a post we want to reply to.
+Posting a message on a board is made with the POST HTTP method. The message and other info are in the form of the request. The form should be an URL encoded data form. The field `content` contains the message and the optional field `replyTo` can contain the id of a post we want to reply to.
 
 If the form is valid, the server will reply with the code 200. If it is not, it will reply with the code 400 and with a message explaining what is wrong.
 
