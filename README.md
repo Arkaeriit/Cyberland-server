@@ -14,6 +14,8 @@ I will be hosting this server at `cyberland.bobignou.red`. Go check it out.
 ### Client
 To access the Cyberland server, you need a client. You can find plenty of them if you search for "cyberland client" on Github but I can always advertise [mine](https://github.com/Arkaeriit/cyberland.lua).
 
+On the other hand, if you want to use Cyberland the way it is intended, you should try to write your own client.
+
 ## This server
 
 ### Launching it
@@ -38,7 +40,8 @@ As of now, the serer does not uses a proper database. All the posts are stored i
 
 ### Default pages
 This server also present some web pages that are not Cyberland boards. They are the following:
-* Configuration page: at `<server URL>/config/`
+* A welcome page at the root.
+* Configuration page: at `<server URL>/config/`.
 
 ## Cyberland protocol
 

@@ -4,13 +4,14 @@ This is the main file that contains the web server.
 It uses flask.
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from db import DataBase
 from config import read_config_file
 import sys
 import json
+import random
 
 # -------------------------- Preparing server's state ------------------------ #
 
@@ -29,13 +30,18 @@ if __name__ == '__main__':
 
 # ------------------------------- Default pages ------------------------------ #
 
+@app.route("/", methods=['GET'])
+def root():
+    all_boards = list(server_config.keys())
+    example_board = random.choice(all_boards)
+    return render_template("index.html", example_board = example_board)
+
 @app.route("/config/", methods=['GET'])
 @app.route("/config", methods=['GET'])
 @limiter.limit('1 per 5 seconds')
 def get_config():
     "This page returns a JSON of the config of all boards."
-    reply = json.dumps(server_config, sort_keys = True, indent = 4, separators = (',', ': '))+'\n'
-    return reply, 200
+    return jsonify(server_config), 200
 
 # --------------------------------- REST API --------------------------------- #
 

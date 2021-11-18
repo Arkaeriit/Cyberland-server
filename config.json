@@ -3,7 +3,28 @@
         "name": "test",
         "description": "A test board. Used to test client and the server.",
         "enable_ansi_code": false,
-        "max_post_size": "10000",
+        "max_post_size": "2000",
+        "max_replies_no_thread": 1000
+    },
+    {
+        "name": "tech",
+        "description": "A board to talk about technologies.",
+        "enable_ansi_code": false,
+        "max_post_size": "1000",
+        "max_replies_no_thread": 1000
+    },
+    {
+        "name": "pic",
+        "description": "A board to post ANSI pictures.",
+        "enable_ansi_code": true,
+        "max_post_size": "100000",
+        "max_replies_no_thread": 100
+    },
+    {
+        "name": "o",
+        "description": "A board to talk about anything else.",
+        "enable_ansi_code": false,
+        "max_post_size": "1000",
         "max_replies_no_thread": 1000
     }
 ]
