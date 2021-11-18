@@ -9,7 +9,7 @@ Unfortunately, the servers hosting the originals Cyberland have been taken down.
 ## Using cyberland
 
 ### Server
-I will be hosting this server at `cyberland.bobignou.red`. Go check it out.
+I am hosting this server at `cyberland.bobignou.red`. Go check it out.
 
 ### Client
 To access the Cyberland server, you need a client. You can find plenty of them if you search for "cyberland client" on Github but I can always advertise [mine](https://github.com/Arkaeriit/cyberland.lua).
