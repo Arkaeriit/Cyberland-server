@@ -10,6 +10,7 @@ from flask_limiter.util import get_remote_address
 from db import DataBase
 from config import read_config_file
 import sys
+import json
 
 # -------------------------- Preparing server's state ------------------------ #
 
@@ -25,6 +26,15 @@ if __name__ == '__main__':
         print("Unable to read configuration.")
         sys.exit(1)
     db = DataBase(server_config, "db.json")
+
+# ------------------------------- Default pages ------------------------------ #
+
+@app.route("/config/", methods=['GET'])
+@limiter.limit('1 per 5 seconds')
+def get_config():
+    "This page returns a JSON of the config of all boards."
+    reply = json.dumps(server_config, sort_keys = True, indent = 4, separators = (',', ': '))+'\n'
+    return reply, 200
 
 # --------------------------------- REST API --------------------------------- #
 
