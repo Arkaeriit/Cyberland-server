@@ -30,6 +30,7 @@ if __name__ == '__main__':
 # ------------------------------- Default pages ------------------------------ #
 
 @app.route("/config/", methods=['GET'])
+@app.route("/config", methods=['GET'])
 @limiter.limit('1 per 5 seconds')
 def get_config():
     "This page returns a JSON of the config of all boards."
@@ -39,6 +40,7 @@ def get_config():
 # --------------------------------- REST API --------------------------------- #
 
 @app.route("/<string:board>/", methods=['POST'])
+@app.route("/<string:board>", methods=['POST'])
 @limiter.limit('1 per 1 seconds')
 @limiter.limit('100 per 30 minutes')
 def posting(board):
@@ -75,6 +77,7 @@ def posting(board):
 
 
 @app.route("/<string:board>/", methods=['GET'])
+@app.route("/<string:board>", methods=['GET'])
 @limiter.limit("5 per 1 second")
 @limiter.limit('100 per 10 minutes')
 def reading(board):
