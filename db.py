@@ -28,11 +28,14 @@ class DataBase:
                 self.db[k] = [{"id": 0, "replyTo": 0, "content": server_config[k]["description"]}]
 
         # Pruning old boards from the DB
+        to_pop = []
         for k in self.db.keys():
             try:
                 server_config[k]
             except KeyError:
-                self.db.pop(k)
+                to_pop.append(k)
+        for k in to_pop:
+            self.db.pop(k)
 
     def update_db(self):
         "Update the db JSON file with new content from the internal DB."
