@@ -6,6 +6,7 @@ JSON file. But this will have to be replaced with a proper database in the futur
 """
 
 import json
+import time
 
 class DataBase:
     """The database containing all the posts. As of now, for testing purpuse,
@@ -25,7 +26,7 @@ class DataBase:
             try:
                 self.db[k]
             except KeyError:
-                self.db[k] = [{"id": 0, "replyTo": 0, "content": server_config[k]["description"]}]
+                self.db[k] = [{"id": 0, "time": 0, "replyTo": 0, "content": server_config[k]["description"]}]
 
         # Pruning old boards from the DB
         to_pop = []
@@ -54,6 +55,7 @@ class DataBase:
         "Tries to append a new post to a board. If it can be done, return True."
         if len(self.db[board]) == post["id"]: # TODO: test for replyTo's value
             self.db[board].append(post)
+            post["time"] = int(time.time())
             self.update_db()
             return True
         else:
