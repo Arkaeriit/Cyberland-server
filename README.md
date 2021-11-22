@@ -1,5 +1,7 @@
 # Cyberland
 
+![Cyberland logo](https://cyberland.bobignou.red/static/ibmhq.png)
+
 ## What is Cyberland
 
 Cyberland is a textboard that offers no frontend. Most of the time, the user makes their own front end. The protocol, as far as I know, made by Github user Jorde Kang and the original repo is [here](https://github.com/jorde-s-kang/cyberland). An alternative version of the server has also been made [here](https://github.com/cyberland-digital/cyberland/wiki).

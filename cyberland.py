@@ -4,7 +4,7 @@ This is the main file that contains the web server.
 It uses flask.
 """
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from db import DataBase
