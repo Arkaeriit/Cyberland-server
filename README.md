@@ -44,6 +44,7 @@ As of now, the serer does not uses a proper database. All the posts are stored i
 This server also present some web pages that are not Cyberland boards. They are the following:
 * A welcome page at the root.
 * Configuration page: at `<server URL>/config/`.
+* At `<server URL>/status`, there is a list of all board and the number of posts in each board.
 
 ## Cyberland protocol
 

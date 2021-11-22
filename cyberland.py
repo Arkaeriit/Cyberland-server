@@ -43,6 +43,18 @@ def get_config():
     "This page returns a JSON of the config of all boards."
     return jsonify(server_config), 200
 
+@app.route("/status/", methods=['GET'])
+@app.route("/status", methods=['GET'])
+@app.route("/length/", methods=['GET'])
+@app.route("/length", methods=['GET'])
+@limiter.limit('1 per 1 seconds')
+def get_lengths():
+    "This page returns the number of posts in each boards."
+    ret = {}
+    for k in db.db.keys():
+        ret[k] = len(db.db[k])
+    return jsonify(ret)
+
 # --------------------------------- REST API --------------------------------- #
 
 @app.route("/<string:board>/", methods=['POST'])
