@@ -59,7 +59,7 @@ def get_lengths():
 
 @app.route("/<string:board>/", methods=['POST'])
 @app.route("/<string:board>", methods=['POST'])
-def posting(board):
+def posting(board, detail:bool=False):
     # Checking if board exists
     try:
         board_config = server_config[board]
@@ -99,7 +99,10 @@ def posting(board):
     if postOK:
         with open(LOG_FILE, "a") as f:
             f.write(str(get_IP(request))+", "+board+", "+str(id)+"\n")
-        return "OK", 200
+        if detail:
+            return "OK", 200, id
+        else:
+            return "OK", 200
     else:
         return "Not OK", 400
 
