@@ -70,7 +70,6 @@ def gc_list():
 # --------------------------------- Main API --------------------------------- #
 
 def manage_request(request):
-    print(get_IP(request))
     try:
         timeout = all_users_time[get_IP(request)]
         if is_allowed_to_post(timeout):

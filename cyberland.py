@@ -9,6 +9,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from db import DataBase
 from config import read_config_file
+from anti_spam import manage_request, get_IP
 import sys
 import json
 import random
@@ -85,6 +86,11 @@ def posting(board):
             chr_int = ord(i)
             if chr_int < 32 and i != "\n" and i != "\r" and i != "\t":
                 return "Error, unauthorized char. ANSI code are not allowed.", 400
+
+    # Checking for spam
+    OK_to_post, timeout = manage_request(request)
+    if not OK_to_post:
+        return "Error, you must wait " + str(timeout) + " ms before posting again.", 400
     
     # Posting
     postOK = db.auto_post(board, content, replyTo)
