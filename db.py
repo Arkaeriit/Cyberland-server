@@ -7,6 +7,7 @@ JSON file. But this will have to be replaced with a proper database in the futur
 
 import json
 import time
+import datetime
 
 class DataBase:
     """The database containing all the posts. As of now, for testing purpuse,
@@ -55,7 +56,7 @@ class DataBase:
         "Tries to append a new post to a board. If it can be done, return True."
         if len(self.db[board]) == post["id"]: # TODO: test for replyTo's value
             self.db[board].append(post)
-            post["time"] = int(time.time())
+            post["time"] = now_utc_unix()
             self.update_db()
             return True
         else:
@@ -97,6 +98,11 @@ class DataBase:
                 if len(ret) == num:
                     break
         return ret
+
+def now_utc_unix():
+    "Returns the current time at UTC in UNIX seconds."
+    date = datetime.datetime.now(datetime.timezone.utc)
+    return int(time.mktime(date.timetuple()))
 
 # ---------------------------------- Testing --------------------------------- #
 

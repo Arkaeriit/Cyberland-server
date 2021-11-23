@@ -61,7 +61,7 @@ Cyberland posts are very simples. They have a unique `id` field which is a posit
 
 The posts also have a `ReplyTo` field. This field contains a positive integer that is the id of another post from the same board. If that field contains 0, that means that the post is not replying to any other and is the start of a new thread. Alternatively, the field can contain "null" to express the same thing.
 
-Then, the posts have a `time` fields. This field should either contain the time-stamp of the post in UNIX seconds or 0 if this is not applicable or not computed.
+Then, the posts have a `time` fields. This field should either contain the time-stamp of the post in UNIX seconds at UTC or 0 if this is not applicable or not computed.
 
 Lastly, the post has a `content` field that contains the message in the post. The message can be made from Unicode characters or, if the board allows it, Unicode characters and ANSI escape code. The content field can have a maximum size and the server could reject messages that are bigger than this size.
 
