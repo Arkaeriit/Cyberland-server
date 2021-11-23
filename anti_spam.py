@@ -116,6 +116,29 @@ try:
 except:
     print("Error, unable to open list of banned IPs.")
 
+# ---------------------------------- Filters --------------------------------- #
+
+BAD_WORDS_FILE = "bad_words.json"
+bad_words = []
+try:
+    with open(BAD_WORDS_FILE, "r") as f:
+        file_content = f.read()
+    bad_words = json.loads(file_content)
+except:
+    print("Error, unable to open list of banned words.")
+
+def try_to_filter(msg, request):
+    """Try to find some of the bad words in the message.
+    If they are found, return False and increase the multiplier
+    of the IP in the request. If they are not found, return True."""
+    m = msg.lower()
+    for bad_word in bad_words:
+        if m.find(bad_word) != -1:
+            timeout = all_users_time[get_IP(request)]
+            timeout["multiplier"] *= 100
+            return False
+    return True
+            
 
 # ---------------------------------- Testing --------------------------------- #
 
@@ -126,6 +149,12 @@ if __name__ == '__main__':
     MULTIPLIER_TIMEOUT_MS = 10_000
     def get_IP(x):
         return x
+    print("---- Test Filter ----")
+    bad_words = ["123"]
+    manage_request(3)
+    print(try_to_filter("56789", 3))
+    print(try_to_filter("5678901234", 3))
+    print(all_users_time)
     print("---- Init users ----")
     print(all_users_time)
     print(manage_request(1))

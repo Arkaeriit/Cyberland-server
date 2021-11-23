@@ -51,6 +51,9 @@ This server generate a line of log for each new message. For every new message, 
 
 In order to bans some peoples from the server, you simply have to write the hash of their IP to a JSON array in the file `bans.json`. This file is optional, if it is not found, an error will be printed at the startup of the server but the server will run nonetheless.
 
+### Content filter
+This server also provides some optional content filters. You can write an array of forbidden words in `bad_words.js` and the server will not accept any message containing those words.
+
 ## Cyberland protocol
 
 ### Boards
