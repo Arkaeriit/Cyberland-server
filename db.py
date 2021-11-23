@@ -63,10 +63,10 @@ class DataBase:
 
     def auto_post(self, board, content, replyTo):
         """Make a new post with a comment and a replyTo and automatically choose the
-        right ID. Returns the same value as new_post."""
+        right ID. Returns the same value as new_post with the added post ID."""
         id = self.next_id(board)
         post = {"id": id, "content": content, "replyTo": replyTo}
-        return self.new_post(board, post)
+        return self.new_post(board, post), id
 
     def get_last_posts(self, board, num):
         "Reads the db to find the last few posts."

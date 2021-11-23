@@ -87,7 +87,7 @@ def manage_request(request):
 
 def get_IP(request):
     "Returns the IP of the sender, even being an Nginx reverse-proxy."
-    return request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+    return hash(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
 
 
 

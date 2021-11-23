@@ -28,6 +28,7 @@ if __name__ == '__main__':
         print("Unable to read configuration.")
         sys.exit(1)
     db = DataBase(server_config, "db.json")
+    LOG_FILE = "cyberland_log"
 
 # ------------------------------- Default pages ------------------------------ #
 
@@ -93,8 +94,10 @@ def posting(board):
         return "Error, you must wait " + str(timeout) + " ms before posting again.", 400
     
     # Posting
-    postOK = db.auto_post(board, content, replyTo)
+    postOK, id = db.auto_post(board, content, replyTo)
     if postOK:
+        with open(LOG_FILE, "a") as f:
+            f.write(str(get_IP(request))+", "+board+", "+str(id)+"\n")
         return "OK", 200
     else:
         return "Not OK", 400
