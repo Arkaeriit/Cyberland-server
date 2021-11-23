@@ -21,7 +21,7 @@ if __name__ == '__main__':
     limiter = Limiter(
         app,
         key_func=get_remote_address,
-        default_limits=["200 per day", "50 per hour"]
+        default_limits=["5 per seconds"]
     )
     config_OK, server_config = read_config_file("config.json")
     if not config_OK:
@@ -40,7 +40,6 @@ def root():
 
 @app.route("/config/", methods=['GET'])
 @app.route("/config", methods=['GET'])
-@limiter.limit('1 per 5 seconds')
 def get_config():
     "This page returns a JSON of the config of all boards."
     return jsonify(server_config), 200
@@ -49,7 +48,6 @@ def get_config():
 @app.route("/status", methods=['GET'])
 @app.route("/length/", methods=['GET'])
 @app.route("/length", methods=['GET'])
-@limiter.limit('1 per 1 seconds')
 def get_lengths():
     "This page returns the number of posts in each boards."
     ret = {}
@@ -61,8 +59,6 @@ def get_lengths():
 
 @app.route("/<string:board>/", methods=['POST'])
 @app.route("/<string:board>", methods=['POST'])
-@limiter.limit('1 per 1 seconds')
-@limiter.limit('100 per 30 minutes')
 def posting(board):
     # Checking if board exists
     try:
@@ -105,8 +101,6 @@ def posting(board):
 
 @app.route("/<string:board>/", methods=['GET'])
 @app.route("/<string:board>", methods=['GET'])
-@limiter.limit("5 per 1 second")
-@limiter.limit('100 per 10 minutes')
 def reading(board):
     # Checking if board exists
     try:
