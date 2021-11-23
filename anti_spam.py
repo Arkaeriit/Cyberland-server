@@ -7,6 +7,8 @@ post to often. It is IP-based.
 from flask import request
 import time
 import json
+import hashlib
+import base64
 
 # Dictionary of all time to wait indexed by IP
 all_users_time = {}
@@ -23,6 +25,15 @@ TIME_TO_WAIT_MULTIPLICATOR = 1.8
 MULTIPLIER_TIMEOUT_MS = 100_000
 
 # ----------------------------- Helper functions ----------------------------- #
+
+def my_hash(s):
+    """A hash-like function that returns a string from a string input.
+    It is not strictly a hash because the output have been encoded with
+    base64 meaning that its size is not constant."""
+    m = hashlib.sha256()
+    m.update(s.encode('UTF-8'))
+    ret = base64.b64encode(m.digest()[0:15]).decode('ASCII')
+    return ret
 
 def millis():
     "Returns the current time in UNIX milliseconds."
@@ -68,14 +79,6 @@ def gc_list():
     for k in to_del:
         all_users_time.pop(k)
 
-def search_in_sorted(array, elem):
-    "Find if the given element is in the sorted array. TODO"
-    try:
-        array.index(elem)
-        return True
-    except ValueError:
-        return False
-
 # --------------------------------- Main API --------------------------------- #
 
 def manage_request(request):
@@ -96,7 +99,7 @@ def manage_request(request):
 
 def get_IP(request):
     "Returns the IP of the sender, even being an Nginx reverse-proxy."
-    return hash(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+    return my_hash(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
 
 # ------------------------------ Handeling bans ------------------------------ #
 
