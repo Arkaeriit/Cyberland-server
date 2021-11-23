@@ -6,6 +6,7 @@ post to often. It is IP-based.
 
 from flask import request
 import time
+import json
 
 # Dictionary of all time to wait indexed by IP
 all_users_time = {}
@@ -49,7 +50,7 @@ def is_allowed_to_post(timeout):
 
 def is_free_from_timeout(timeout):
     "Tells if we should remove a user from the list of timeouts."
-    end = timeout["last_post"] + MULTIPLIER_TIMEOUT_MS
+    end = timeout["last_post"] + MULTIPLIER_TIMEOUT_MS * timeout["multiplier"]
     now = millis()
     return now > end
 
@@ -66,6 +67,14 @@ def gc_list():
             to_del.append(k)
     for k in to_del:
         all_users_time.pop(k)
+
+def search_in_sorted(array, elem):
+    "Find if the given element is in the sorted array. TODO"
+    try:
+        array.index(elem)
+        return True
+    except ValueError:
+        return False
 
 # --------------------------------- Main API --------------------------------- #
 
@@ -89,6 +98,20 @@ def get_IP(request):
     "Returns the IP of the sender, even being an Nginx reverse-proxy."
     return hash(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
 
+# ------------------------------ Handeling bans ------------------------------ #
+
+# Reads a JSON of banned IP hashed
+BANNED_IP_FILE = "bans.json"
+try:
+    with open(BANNED_IP_FILE, "r") as f:
+        file_content = f.read()
+    list_of_bans = json.loads(file_content)
+    for banned in list_of_bans:
+        all_users_time[banned] = init_timeout()
+        # Ban people simply have an infinitely long time to wait before posting again.
+        all_users_time[banned]["multiplier"] = 10**10 
+except:
+    print("Error, unable to open list of banned IPs.")
 
 
 # ---------------------------------- Testing --------------------------------- #
@@ -116,7 +139,7 @@ if __name__ == '__main__':
     sleep_millis(3000)
     print(manage_request(2))
     print("---- Test GC ----")
-    sleep_millis(15_000)
+    sleep_millis(MULTIPLIER_TIMEOUT_MS * TIME_TO_WAIT_MULTIPLICATOR * TIME_TO_WAIT_MULTIPLICATOR)
     print(manage_request(1))
     print(all_users_time)
 

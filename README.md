@@ -46,6 +46,11 @@ This server also present some web pages that are not Cyberland boards. They are 
 * Configuration page: at `<server URL>/config/`.
 * At `<server URL>/status`, there is a list of all board and the number of posts in each board.
 
+### Logging and banning
+This server generate a line of log for each new message. For every new message, a new line will be added on the log file `cyberland_log`. The line contains a hash of the IP of the poster, the board where the post have been made and the ID of the post.
+
+In order to bans some peoples from the server, you simply have to write the hash of their IP to a JSON array in the file `bans.json`. This file is optional, if it is not found, an error will be printed at the startup of the server but the server will run nonetheless.
+
 ## Cyberland protocol
 
 ### Boards
