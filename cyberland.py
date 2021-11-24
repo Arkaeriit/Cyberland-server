@@ -74,6 +74,8 @@ def posting(board):
     if not replyTo.isdigit():
         return "Error, replyTo is not a number nor null!", 400
     replyTo = int(replyTo)
+    if not content:
+        return "Error, no content provided.", 400
     if len(content) > board_config["max_post_size"]:
         return "Error, post too long. Max size = "+str(board_config["max_post_size"])+", size of the message = "+str(len(content))+".", 400
 

@@ -39,7 +39,9 @@ class DataBase:
 
     def new_post(self, board, post):
         "Tries to append a new post to a board. If it can be done, return True."
-        if len(self.db[board]) == post["id"]: # TODO: test for replyTo's value
+        if len(self.db[board]) == post["id"]:
+            if post["replyTo"] >= len(self.db[board]):
+                return False
             self.db[board].append(post)
             post["time"] = now_utc_unix()
             self.update_db(board)
