@@ -24,6 +24,12 @@ TIME_TO_WAIT_MULTIPLICATOR = 1.8
 # Fortunately, after a time, the multiplier is reset
 MULTIPLIER_TIMEOUT_MS = 100_000
 
+# Tells if we set up a wait for first time users
+LIMIT_FIRST_CONNECTION = True
+
+# Time to wait between the first connection and the fist post
+FIST_CONNECTION_DELAY_MS = 1000 * 60 * 5
+
 # ----------------------------- Helper functions ----------------------------- #
 
 def my_hash(s):
@@ -44,24 +50,31 @@ def init_timeout():
     ret = {
             "last_post": millis(),
             "multiplier": 1,
+            "extra_delay": 0
             }
+    if LIMIT_FIRST_CONNECTION:
+        ret["extra_delay"] += FIST_CONNECTION_DELAY_MS - TIME_TO_WAIT_MILLIS
+        ret["multiplier"] = 1 / TIME_TO_WAIT_MULTIPLICATOR
     return ret
 
 def time_until_next_post(timeout):
     """Return the time in milliseconds until the user with
     the given timeout will be allowed to post."""
-    time_to_wait = int(timeout["multiplier"] * TIME_TO_WAIT_MILLIS)
+    time_to_wait = int(timeout["multiplier"] * TIME_TO_WAIT_MILLIS) + timeout["extra_delay"]
     end = timeout["last_post"] + time_to_wait
     now = millis()
     return end - now
 
 def is_allowed_to_post(timeout):
     next_post = time_until_next_post(timeout)
-    return next_post < 0
+    ret = next_post < 0
+    if ret:
+        timeout["extra_delay"] = 0
+    return ret
 
 def is_free_from_timeout(timeout):
     "Tells if we should remove a user from the list of timeouts."
-    end = timeout["last_post"] + MULTIPLIER_TIMEOUT_MS * timeout["multiplier"]
+    end = timeout["last_post"] + MULTIPLIER_TIMEOUT_MS * timeout["multiplier"] + timeout["extra_delay"]
     now = millis()
     return now > end
 
@@ -75,11 +88,16 @@ def gc_list():
     to_del = []
     for k in all_users_time.keys():
         if is_free_from_timeout(all_users_time[k]):
-            to_del.append(k)
-    for k in to_del:
-        all_users_time.pop(k)
+            all_users_time[k]["multiplier"] = 1
+            all_users_time[k]["extra_delay"] = 0
 
 # --------------------------------- Main API --------------------------------- #
+
+manage_request_ret = {
+        "OK": 0,
+        "Limit": 1,
+        "First_time": 2
+}
 
 def manage_request(request):
     try:
@@ -88,14 +106,17 @@ def manage_request(request):
             if is_free_from_timeout(timeout):
                 gc_list()
             update_user(timeout)
-            return True, 0
+            return manage_request_ret["OK"], 0
         else:
             update_user(timeout)
             next_post = time_until_next_post(timeout)
-            return False, next_post
+            return manage_request_ret["Limit"], next_post
     except KeyError:
         all_users_time[get_IP(request)] = init_timeout()
-        return True, 0
+        if LIMIT_FIRST_CONNECTION:
+            return manage_request_ret["First_time"], FIST_CONNECTION_DELAY_MS
+        else:
+            return manage_request_ret["OK"], 0
 
 def get_IP(request):
     "Returns the IP of the sender, even being an Nginx reverse-proxy."

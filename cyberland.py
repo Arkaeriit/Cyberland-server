@@ -9,7 +9,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from db import DataBase
 from config import read_config_file
-from anti_spam import manage_request, get_IP, try_to_filter
+from anti_spam import manage_request, get_IP, try_to_filter, manage_request_ret
 import sys
 import json
 import random
@@ -86,8 +86,10 @@ def posting(board):
 
     # Checking for spam
     OK_to_post, timeout = manage_request(request)
-    if not OK_to_post:
+    if OK_to_post == manage_request_ret["Limit"]:
         return "Error, you must wait " + str(timeout) + " ms before posting again.", 400
+    elif OK_to_post == manage_request_ret["First_time"]:
+        return "As it is your first time posting, you must wait " + str(timeout) + " ms before posting.", 400
 
     # Checking for forbidden words
     language_OK = try_to_filter(content, request)
