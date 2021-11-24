@@ -122,6 +122,18 @@ def get_IP(request):
     "Returns the IP of the sender, even being an Nginx reverse-proxy."
     return my_hash(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
 
+# -------------------------- List of verified users -------------------------- #
+
+VERIFIED_USERS_LIST = "verified.json"
+try:
+    with open(VERIFIED_USERS_LIST, "r") as f:
+        file_content = f.read()
+    list_of_verified = json.loads(file_content)
+    for user in list_of_verified:
+        all_users_time[user] = init_timeout()
+except:
+    print("Error, unable to open list of verified IPs.")
+
 # ------------------------------ Handeling bans ------------------------------ #
 
 # Reads a JSON of banned IP hashed
