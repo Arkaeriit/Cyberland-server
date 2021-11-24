@@ -12,37 +12,22 @@ import datetime
 class DataBase:
     """The database containing all the posts. As of now, for testing purpuse,
     it is only an humble JSON file"""
-    def __init__(self, server_config, db_filename):
-        # Reading db file
-        self.db_filename = db_filename
-        try:
-            with open(db_filename, "r") as db_f:
-                self.db = json.load(db_f)
-        except FileNotFoundError: # New server
-            self.db = {}
-        # Note: JSONDecodeError are considered fatal and not catched
+    def __init__(self, server_config, db_dir):
+        self.db_dir = db_dir
+        self.db = {}
 
-        # Starting up new boards
+        # Reading db files
         for k in server_config.keys():
             try:
-                self.db[k]
-            except KeyError:
+                with open(db_dir + "/" + k + ".json", "r") as db_f:
+                    self.db[k] = json.load(db_f)
+            except FileNotFoundError: # New board
                 self.db[k] = [{"id": 0, "time": 0, "replyTo": 0, "content": server_config[k]["description"]}]
 
-        # Pruning old boards from the DB
-        to_pop = []
-        for k in self.db.keys():
-            try:
-                server_config[k]
-            except KeyError:
-                to_pop.append(k)
-        for k in to_pop:
-            self.db.pop(k)
-
-    def update_db(self):
+    def update_db(self, board):
         "Update the db JSON file with new content from the internal DB."
-        with open(self.db_filename, "w") as db_f:
-            json_str = json.dumps(self.db)
+        with open(self.db_dir + "/" + board + ".json", "w") as db_f:
+            json_str = json.dumps(self.db[board])
             db_f.write(json_str)
 
     def __str__(self):
@@ -57,7 +42,7 @@ class DataBase:
         if len(self.db[board]) == post["id"]: # TODO: test for replyTo's value
             self.db[board].append(post)
             post["time"] = now_utc_unix()
-            self.update_db()
+            self.update_db(board)
             return True
         else:
             return False

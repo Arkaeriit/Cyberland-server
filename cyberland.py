@@ -27,7 +27,7 @@ if __name__ == '__main__':
     if not config_OK:
         print("Unable to read configuration.")
         sys.exit(1)
-    db = DataBase(server_config, "db.json")
+    db = DataBase(server_config, "db")
     LOG_FILE = "cyberland_log"
 
 # ------------------------------- Default pages ------------------------------ #
