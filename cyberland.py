@@ -13,6 +13,7 @@ from anti_spam import manage_request, get_IP, try_to_filter, manage_request_ret
 import sys
 import json
 import random
+from flask_cors import CORS
 
 # -------------------------- Preparing server's state ------------------------ #
 
@@ -23,6 +24,7 @@ if __name__ == '__main__':
         key_func=get_remote_address,
         default_limits=["5 per seconds"]
     )
+    CORS(app)
     config_OK, server_config = read_config_file("config.json")
     if not config_OK:
         print("Unable to read configuration.")
