@@ -67,6 +67,8 @@ def posting(board):
         return "Error, requested board does not exits.", 400
 
     # Getting and testing the arguments
+    if 'content' not in request.form:
+        return 'Error, content is required', 400
     content = request.form.get('content')
     replyTo = request.form.get('replyTo')
     if not replyTo or replyTo == 'null':
