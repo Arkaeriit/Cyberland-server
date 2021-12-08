@@ -11,7 +11,7 @@ Unfortunately, the servers hosting the originals Cyberland have been taken down.
 ## Using cyberland
 
 ### Server
-I am hosting this server at [cyberland.bobignou.red](https://cyberland.bobignou.red). Go check it out.
+I am hosting this server at [cyberland.bobignou.red](https://cyberland.bobignou.red). Unfortunately, because of an ISP issue, the site is currentely offline. I will re-open it as soon as I can. I unfortunately can not give a date for the re-opening yet. 
 
 ### Client
 To access the Cyberland server, you need a client. You can find plenty of them if you search for "cyberland client" on Github but I can always advertise [mine](https://github.com/Arkaeriit/cyberland.lua).
