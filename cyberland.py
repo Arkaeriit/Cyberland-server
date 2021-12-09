@@ -4,7 +4,7 @@ This is the main file that contains the web server.
 It uses flask.
 """
 
-from flask import Flask, request, jsonify, render_template, url_for
+from flask import Flask, request, jsonify, render_template, url_for, make_response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from db import DataBase
@@ -34,6 +34,14 @@ if __name__ == '__main__':
 
 # ------------------------------- Default pages ------------------------------ #
 
+def render_txt(filename):
+    "Render a txt file from the `txt` folder."
+    with open("txt/" + filename, "r") as f:
+        txt = f.read()
+    response = make_response(txt, 200)
+    response.mimetype = "text/plain"
+    return response
+
 @app.route("/", methods=['GET'])
 def root():
     all_boards = list(server_config.keys())
@@ -43,7 +51,7 @@ def root():
 @app.route("/tut.txt/", methods=['GET'])
 @app.route("/tut.txt", methods=['GET'])
 def tut_txt():
-    return render_template("tut.txt")
+    return render_txt("tut.txt")
 
 @app.route("/config/", methods=['GET'])
 @app.route("/config", methods=['GET'])
