@@ -53,6 +53,11 @@ def root():
 def tut_txt():
     return render_txt("tut.txt")
 
+@app.route("/banner.txt/", methods=['GET'])
+@app.route("/banner.txt", methods=['GET'])
+def banner_txt():
+    return render_txt("banner.txt")
+
 @app.route("/config/", methods=['GET'])
 @app.route("/config", methods=['GET'])
 def get_config():

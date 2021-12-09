@@ -48,6 +48,7 @@ This server also present some web pages that are not Cyberland boards. They are 
 * At `<server URL>/status`, there is a list of all board and the number of posts in each board.
 * A very basic tutorial at `<server URL>/tut.txt`
 * A small descriptions of boards at `<server URL>/boards`.
+* A nice ASCII banner at `<server URL>/banner.txt`.
 
 ### Logging and banning
 This server generate a line of log for each new message. For every new message, a new line will be added on the log file `cyberland_log`. The line contains a hash of the IP of the poster, the board where the post have been made and the ID of the post.
@@ -107,12 +108,15 @@ To prevent clients from making too many requests, the server reserve itself the 
 A Cyberland server must provides some default pages to help both the client makers and users to use the server.
 
 #### tut.txt
-At `<client URL>/tut.txt` there should be a swift tutorial as a raw text file.
+At `<banner URL>/tut.txt` there should be a swift tutorial as a raw text file.
 
 #### boards
-At `<client URL>/boards` there should be a JSON list of all the boards. For each board, there is a dictionary with the following fields:
+At `<server URL>/boards` there should be a JSON list of all the boards. For each board, there is a dictionary with the following fields:
 * `slug` - the fully qualified path of the board /\*/, eg: /t/
 * `name` - the long name of the board, eg: tech
 * `charLimit` - the character limit per post on the board
 * `posts` - the total number of posts to the board at the time of the request
+
+#### banner.txt
+At `<server URL>/banner.txt` there should be a nice ASCII art that can act as the banner for the server.
 
