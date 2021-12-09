@@ -29,6 +29,7 @@ For each board, the configuration fields are the following:
 | Name                     | type    | Description                                                                                                |
 |--------------------------|---------|------------------------------------------------------------------------------------------------------------|
 | name                     | string  | Name of the board as used in the URL.                                                                      |
+| long\_name               | string  | Full name of the board (optional).                                                                         |
 | description              | string  | A description of what this board is about.                                                                 |
 | max\_post\_size          | integer | Maximum size of a post in bytes.                                                                           |
 | enable\_ansi\_code       | boolean | Set to true to enable ANSI escape codes in a board.                                                        |
@@ -45,6 +46,8 @@ This server also present some web pages that are not Cyberland boards. They are 
 * A welcome page at the root.
 * Configuration page: at `<server URL>/config/`.
 * At `<server URL>/status`, there is a list of all board and the number of posts in each board.
+* A very basic tutorial at `<server URL>/tut.txt`
+* A small descriptions of boards at `<server URL>/boards`.
 
 ### Logging and banning
 This server generate a line of log for each new message. For every new message, a new line will be added on the log file `cyberland_log`. The line contains a hash of the IP of the poster, the board where the post have been made and the ID of the post.
@@ -99,4 +102,17 @@ The server will reply with a JSON array containing all the posts requested. If t
 If the parameter makes sense, the server will reply with the status code 200. If there is an error the status code 400 will be replied and an error message will be sent.
 
 To prevent clients from making too many requests, the server reserve itself the right to capping the maximum number of post to be sent. If the number is capped in a reply, it is up to the client to check for an error. I really advise against doing so when the `thread` field is set to ensure that users can read all threads completely.
+
+### Default pages
+A Cyberland server must provides some default pages to help both the client makers and users to use the server.
+
+#### tut.txt
+At `<client URL>/tut.txt` there should be a swift tutorial as a raw text file.
+
+#### boards
+At `<client URL>/boards` there should be a JSON list of all the boards. For each board, there is a dictionary with the following fields:
+* `slug` - the fully qualified path of the board /\*/, eg: /t/
+* `name` - the long name of the board, eg: tech
+* `charLimit` - the character limit per post on the board
+* `posts` - the total number of posts to the board at the time of the request
 

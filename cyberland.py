@@ -66,6 +66,16 @@ def get_lengths():
 @app.route("/boards", methods=['GET'])
 def get_boards():
     "Returns a description slimmer than /status but longer than /config."
+    ret = []
+    for server in server_config:
+        print(server)
+        serv_formated = {
+                "slug":      server_config[server]["name"],
+                "name":      server_config[server]["long_name"],
+                "charLimit": server_config[server]["max_post_size"],
+                "post":      len(db.db[server_config[server]["name"]])}
+        ret.append(serv_formated)
+    return jsonify(ret)
 
 # --------------------------------- REST API --------------------------------- #
 
