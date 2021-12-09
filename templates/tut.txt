@@ -1,0 +1,25 @@
+# Tutorial
+
+## Reading
+Reading from here is made with a HTTP GET request.
+For ecample, to read the last two post from the board /o/, you can use the
+command:
+```
+curl https://cyberland.bobignou.red/o/?num=2
+```
+
+## Posting
+Posting is made with a HTTP POST method. The message is in an URL encoded
+form. For example, if you want to post 'test' on the board /x/, you can use
+the command:
+```
+curl -d 'content=test&replyTo=0' -X POST https://cyberland.bobignou.red/x/
+```
+
+## More info
+A more in depth explanation can be found here:
+https://github.com/Arkaeriit/Cyberland-server
+
+Alternatively, you can search for cyberland clients on GitHub and read their
+source code or use them as is.
+

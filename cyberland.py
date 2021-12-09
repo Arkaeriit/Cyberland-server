@@ -40,6 +40,11 @@ def root():
     example_board = random.choice(all_boards)
     return render_template("index.html", example_board = example_board)
 
+@app.route("/tut.txt/", methods=['GET'])
+@app.route("/tut.txt", methods=['GET'])
+def tut_txt():
+    return render_template("tut.txt")
+
 @app.route("/config/", methods=['GET'])
 @app.route("/config", methods=['GET'])
 def get_config():
