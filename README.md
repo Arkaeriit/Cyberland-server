@@ -120,3 +120,22 @@ At `<server URL>/boards` there should be a JSON list of all the boards. For each
 #### banner.txt
 At `<server URL>/banner.txt` there should be a nice ASCII art that can act as the banner for the server.
 
+## Differences with the old Cyberland protocol
+With the old Cyberland servers, an [other specification](https://github.com/cyberland-digital/cyberland-protocol/blob/master/protocol.md) had been written. I choose to modify some part of the specification that I did not find well thought out and that were not critical for the clients.
+
+### Root in plain text
+To make the site more friendly, I choose to make the root page in HTML. Thanks to that, I can add link and picture in this page.
+
+Unfortunately, this also means that the root page is not suitable for the ASCII banner. I choose to create a new static page, `/banner.txt` where the ASCII banner is located.
+
+### Error code
+The original specification mention the use of different HTTP return code to detail the errors. But as there is more kind of errors than what the HTTP return code are made for. Thus, I believe that it make more sense to detail the error in a text message. In that situation, the various code don't make much sense anymore and using the 400 code all the time is enough.
+
+### Time
+The original specification mention that the time should be returned in the format "YYYY-MM-DD hh:mm:ss". But I feel like it makes more sense to return the time in UNIX seconds and let the client handle the conversion.
+
+### TODO
+There is some parts of the original specification that I want to implement but that I did not implemented yer:
+* Bump count
+* offset parameter
+
