@@ -62,6 +62,11 @@ def get_lengths():
         ret[k] = len(db.db[k])
     return jsonify(ret)
 
+@app.route("/boards/", methods=['GET'])
+@app.route("/boards", methods=['GET'])
+def get_boards():
+    "Returns a description slimmer than /status but longer than /config."
+
 # --------------------------------- REST API --------------------------------- #
 
 @app.route("/<string:board>/", methods=['POST'])

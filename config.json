@@ -1,6 +1,7 @@
 [
     {
         "name": "x",
+        "long_name": "test",
         "description": "A test board. Used to test client and the server.",
         "enable_ansi_code": true,
         "max_post_size": "2000",
@@ -8,6 +9,7 @@
     },
     {
         "name": "n",
+        "long_name": "news",
         "description": "A board to talk about news.",
         "enable_ansi_code": false,
         "max_post_size": "1500",
@@ -15,6 +17,7 @@
     },
     {
         "name": "t",
+        "long_name": "tech",
         "description": "A board to talk about technologies.",
         "enable_ansi_code": false,
         "max_post_size": "1000",
@@ -22,6 +25,7 @@
     },
     {
         "name": "i",
+        "long_name": "images",
         "description": "A board to post ANSI pictures.",
         "enable_ansi_code": true,
         "max_post_size": "100000",
@@ -29,6 +33,7 @@
     },
     {
         "name": "o",
+        "long_name": "other",
         "description": "A board to talk about anything else.",
         "enable_ansi_code": false,
         "max_post_size": "1000",

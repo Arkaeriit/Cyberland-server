@@ -21,6 +21,7 @@ def json_to_dic(filename):
 # and their type
 config_fields = [
         {"name": "name",                  "type": str,  "optional": False},
+        {"name": "long_name",             "type": str,  "optional": True,  "default": ""},
         {"name": "description",           "type": str,  "optional": True,  "default": ""},
         {"name": "max_post_size",         "type": int,  "optional": False},
         {"name": "enable_ansi_code",      "type": bool, "optional": False},
