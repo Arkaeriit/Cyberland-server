@@ -58,7 +58,7 @@ In order to bans some peoples from the server, you simply have to write the hash
 ### Anti-spam
 To prevent users from spamming, there is a delay between each post one user can do. The user is tracked with its IP. Furthermore, to prevent users from bypassing the delay, they must wait some time before their first connection. All the constants related to this are at the beginning of `anti_spam.py`.
 
-To make sure that trusted users will not have to wait for the delay, you can put their hashed IPs in a list in the file `verified.json`.
+To make sure that trusted users will not have to wait for the delay, you can put their hashed IPs in a list in the file `verified.json`. Any user that makes a post is also added to the list of verified users so that they only need to wait once.
 
 ### Content filter
 This server also provides some optional content filters. You can write an array of forbidden words in `bad_words.js` and the server will not accept any message containing those words.

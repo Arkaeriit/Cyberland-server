@@ -45,16 +45,20 @@ def millis():
     "Returns the current time in UNIX milliseconds."
     return int(time.time_ns() / 1_000_000)
 
-def init_timeout():
-    "When a user has no entry in the wait DB, generates a new entry."
+def init_timeout(limit_first_connection):
+    """"When a user has no entry in the wait DB, generates a new entry.
+    The boolean argument tells if we should limit the iser if it is their first post."""
     ret = {
             "last_post": millis(),
             "multiplier": 1,
             "extra_delay": 0
             }
-    if LIMIT_FIRST_CONNECTION:
+    if LIMIT_FIRST_CONNECTION and limit_first_connection:
         ret["extra_delay"] += FIST_CONNECTION_DELAY_MS - TIME_TO_WAIT_MILLIS
         ret["multiplier"] = 1 / TIME_TO_WAIT_MULTIPLICATOR
+        ret["first_time"] = True
+    else:
+        ret["first_time"] = False
     return ret
 
 def time_until_next_post(timeout):
@@ -106,13 +110,15 @@ def manage_request(request):
             if is_free_from_timeout(timeout):
                 gc_list()
             update_user(timeout)
+            if LIMIT_FIRST_CONNECTION and timeout["first_time"]:
+                verify_user(get_IP(request))
             return manage_request_ret["OK"], 0
         else:
             update_user(timeout)
             next_post = time_until_next_post(timeout)
             return manage_request_ret["Limit"], next_post
     except KeyError:
-        all_users_time[get_IP(request)] = init_timeout()
+        all_users_time[get_IP(request)] = init_timeout(True)
         if LIMIT_FIRST_CONNECTION:
             return manage_request_ret["First_time"], FIST_CONNECTION_DELAY_MS
         else:
@@ -130,9 +136,21 @@ try:
         file_content = f.read()
     list_of_verified = json.loads(file_content)
     for user in list_of_verified:
-        all_users_time[user] = init_timeout()
+        all_users_time[user] = init_timeout(False)
 except:
     print("Error, unable to open list of verified IPs.")
+
+def verify_user(user_id):
+    "Add an user to the list of verified users."
+    try:
+        with open(VERIFIED_USERS_LIST, "r") as f:
+            file_content = f.read()
+        list_of_verified = json.loads(file_content)
+    except:
+        list_of_verified = []
+    list_of_verified.append(user_id)
+    with open(VERIFIED_USERS_LIST, "w") as f:
+        f.write(json.dumps(list_of_verified))
 
 # ------------------------------ Handeling bans ------------------------------ #
 
@@ -143,7 +161,7 @@ try:
         file_content = f.read()
     list_of_bans = json.loads(file_content)
     for banned in list_of_bans:
-        all_users_time[banned] = init_timeout()
+        all_users_time[banned] = init_timeout(True)
         # Ban people simply have an infinitely long time to wait before posting again.
         all_users_time[banned]["multiplier"] = 10**10 
 except:
