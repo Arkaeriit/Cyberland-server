@@ -22,7 +22,7 @@ class DataBase:
                 with open(db_dir + "/" + k + ".json", "r") as db_f:
                     self.db[k] = json.load(db_f)
             except FileNotFoundError: # New board
-                self.db[k] = [{"id": 0, "time": 0, "replyTo": 0, "content": server_config[k]["description"]}]
+                self.db[k] = [{"id": 0, "time": 0, "replyTo": 0, "content": server_config[k]["description"], "bumpCount": 1}]
 
     def update_db(self, board):
         "Update the db JSON file with new content from the internal DB."
@@ -44,6 +44,7 @@ class DataBase:
                 return False
             self.db[board].append(post)
             post["time"] = now_utc_unix()
+            self.db[board][post["replyTo"]]["bumpCount"] += 1
             self.update_db(board)
             return True
         else:
