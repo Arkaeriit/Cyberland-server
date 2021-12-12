@@ -4,7 +4,7 @@
 
 ## What is Cyberland
 
-Cyberland is a textboard that offers no frontend. Most of the time, the user makes their own front end. The protocol, as far as I know, made by Github user Jorde Kang and the original repo is [here](https://github.com/jorde-s-kang/cyberland). An alternative version of the server has also been made [here](https://github.com/cyberland-digital/cyberland/wiki).
+Cyberland is a textboard that offers no frontend. Most of the time, the user makes their own front end. The protocol, as far as I know, was made by Github user Jorde Kang and the original repo is [here](https://github.com/jorde-s-kang/cyberland). An alternative version of the server has also been made [here](https://github.com/cyberland-digital/cyberland/wiki).
 
 Unfortunately, the servers hosting the originals Cyberland have been taken down. Thus, I want to make a new one. I have chosen to make it from scratch instead of reusing one for two reasons. Firstly, I want to learn a bit about web technologies. Secondly, as the specifications of the Cyberland protocol have never been written, I want to make them.
 
@@ -36,10 +36,10 @@ For each board, the configuration fields are the following:
 | max\_replies\_thread     | integer | Maximum number of posts the server can present when the parameter `thread` is set. Set to 0 to disable.    |
 | max\_replies\_no\_thread | integer | Maximum number of posts the server can present when the parameter `thread` is not set. Set to 0 to disable.|
 
-I included in this repository the configuration used on `cyberland;github.com`.
+I included in this repository the configuration used on `cyberland.bobignou.red`.
 
 ### Database
-As of now, the serer does not uses a proper database. All the posts are stored in a JSON file.
+As of now, the serer does not uses a proper database. All the posts are stored in multiple JSON files.
 
 ### Default pages
 This server also present some web pages that are not Cyberland boards. They are the following:
@@ -61,7 +61,7 @@ To prevent users from spamming, there is a delay between each post one user can 
 To make sure that trusted users will not have to wait for the delay, you can put their hashed IPs in a list in the file `verified.json`. Any user that makes a post is also added to the list of verified users so that they only need to wait once.
 
 ### Content filter
-This server also provides some optional content filters. You can write an array of forbidden words in `bad_words.js` and the server will not accept any message containing those words.
+This server also provides some optional content filters. You can write an array of forbidden words in `bad_words.json` and the server will not accept any message containing those words.
 
 ## Cyberland protocol
 
