@@ -155,12 +155,18 @@ def reading(board):
     # Validated request form
     num = request.args.get('num')
     thread = request.args.get('thread')
+    offset = request.args.get('offset')
     if not num:
         num = '100' #TODO: config
     if num.isdigit():
         num_int = int(num)
     else:
         return "Num parameter is not a number", 400
+    if not offset:
+        offset = '0'
+    if not offset.isdigit():
+        return "Offset parameter is not a number", 400
+    offset = int(offset)
 
     # Limiting reply size
     if not thread:
@@ -174,8 +180,8 @@ def reading(board):
 
     # Reading last posts
     if not thread:
-        reply = db.get_last_posts(board, num_int)
-        return jsonify(reply), 200
+        reply = db.get_last_posts(board, num_int + offset)
+        return jsonify(reply[offset:]), 200
     # Reading part of a thread
     else:
         if thread.isdigit():
@@ -187,9 +193,9 @@ def reading(board):
         OP, post_OK = db.get_post(board, thread_int)
         if not post_OK:
             return "Error, no such thread as " + thread, 400
-        replies = db.get_first_replies(board, num_int-1, thread_int)
+        replies = db.get_first_replies(board, num_int-1+offset, thread_int)
         reply = [OP] + replies
-        return jsonify(reply), 200
+        return jsonify(reply[offset:]), 200
 
 
 # ---------------------------- Running the server ---------------------------- #

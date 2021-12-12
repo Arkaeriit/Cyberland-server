@@ -100,11 +100,13 @@ The first valid parameter is `num`. It should contain a positive integer. It des
 
 The second valid parameter is `thread`. It should contain an id. If it is set, the server will return the post with the given id and posts replying to it.
 
+The third valid parameter is `offset`. It defaults to 0 and it is used to ask the sever to skip the given number of first post. This is needed to see old post even when the server imposes a limit in the number of post replied.
+
 The server will reply with a JSON array containing all the posts requested. If the parameter `thread` is not set, the post with the greatest id will be at the index 0 of the array. The rest of the posts are sorted by decreasing id. If the parameter `thread` is set, the post with the smaller id will be at index 0 and the other post will be sorted by increasing id. This is made that way to ensure that a request with parameters `num=1` and thread not set will return the latest post and a request where `num=1&thread=<XX>` will return the pos with id `<XX>`.
 
 If the parameter makes sense, the server will reply with the status code 200. If there is an error the status code 400 will be replied and an error message will be sent.
 
-To prevent clients from making too many requests, the server reserve itself the right to capping the maximum number of post to be sent. If the number is capped in a reply, it is up to the client to check for an error. I really advise against doing so when the `thread` field is set to ensure that users can read all threads completely.
+To prevent clients from making too many requests, the server reserve itself the right to capping the maximum number of post to be sent. If the number is capped in a reply, it is up to the client to check for an error.
 
 ### Default pages
 A Cyberland server must provides some default pages to help both the client makers and users to use the server.
@@ -135,8 +137,4 @@ The original specification mention the use of different HTTP return code to deta
 
 ### Time
 The original specification mention that the time should be returned in the format "YYYY-MM-DD hh:mm:ss". But I feel like it makes more sense to return the time in UNIX seconds and let the client handle the conversion.
-
-### TODO
-There is some parts of the original specification that I want to implement but that I did not implemented yer:
-* offset parameter
 
