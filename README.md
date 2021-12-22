@@ -26,6 +26,7 @@ This Cyberland server is written in Python 3 using Flask. Running `cyberland.py`
 ### Configuration
 The server is configurated from a single JSON file. The JSON file contains an array where each entry corresponds to a board the server will serve.
 For each board, the configuration fields are the following:
+
 | Name                     | type    | Description                                                                                                |
 |--------------------------|---------|------------------------------------------------------------------------------------------------------------|
 | name                     | string  | Name of the board as used in the URL.                                                                      |
@@ -43,6 +44,7 @@ As of now, the serer does not uses a proper database. All the posts are stored i
 
 ### Default pages
 This server also present some web pages that are not Cyberland boards. They are the following:
+
 * A welcome page at the root.
 * Configuration page: at `<server URL>/config/`.
 * At `<server URL>/status`, there is a list of all board and the number of posts in each board.
@@ -116,6 +118,7 @@ At `<banner URL>/tut.txt` there should be a swift tutorial as a raw text file.
 
 #### boards
 At `<server URL>/boards` there should be a JSON list of all the boards. For each board, there is a dictionary with the following fields:
+
 * `slug` - the fully qualified path of the board /\*/, eg: /t/
 * `name` - the long name of the board, eg: tech
 * `charLimit` - the character limit per post on the board
